@@ -6,6 +6,56 @@
   <meta name="description" content="Особиста сторінка Дудніка Артура">
   <title>Дуднік Артур - Особиста сторінка</title>
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let currentNode = document.body.firstElementChild;
+
+      function navigateDOM(node, callback) {
+        if (!node) {
+          alert("Більше узлів немає.");
+          return;
+        }
+
+        const content = node.tagName + ": " + (node.textContent.trim() || "[порожньо]");
+        let message;
+
+        if (!node.nextElementSibling) {
+          message = `${content}\n\nЦе нижний узел. Ви хочете повернутися назад або завершити?`;
+          callback(node, false);
+        } else if (!node.previousElementSibling) {
+          message = `${content}\n\nВи хочете перейти до наступного узла или завершити?`;
+          callback(node, true);
+        } else {
+          message = `${content}\n\nПерейти до наступного узла або повернутися назад?`;
+          callback(node, true);
+        }
+
+        const action = confirm(message);
+
+        if (action) {
+          if (node.nextElementSibling) {
+            currentNode = node.nextElementSibling;
+            navigateDOM(currentNode, callback);
+          } else {
+            alert("Досягли кінця!");
+          }
+        } else {
+          if (node.previousElementSibling) {
+            currentNode = node.previousElementSibling;
+            navigateDOM(currentNode, callback);
+          } else {
+            alert("Повернутися більше неможливо.");
+          }
+        }
+      }
+
+      document.querySelector("header h1").addEventListener("click", function() {
+        navigateDOM(currentNode, function(node, canAdvance) {
+          if (!canAdvance) return;
+        });
+      });
+    });
+  </script>
 </head>
 <body>
 <header>
@@ -27,6 +77,7 @@
     <li><strong>Університет:</strong> УМСФ (Університет митної справи та фінансів)</li>
   </ul>
 </section>
+
 <section class="university">
   <h2>Про Університет</h2>
   <p>Університет митної справи та фінансів (УМСФ) — це вищий навчальний заклад в Україні, що спеціалізується на підготовці фахівців у галузі митної справи, фінансів, економіки та права. Університет пропонує високий рівень освіти, сучасні програми навчання та має партнерства з міжнародними освітніми установами.</p>
@@ -36,6 +87,5 @@
     <a href="http://umsf.dp.ua/" target="_blank">umsf.dp.ua</a>
   </p>
 </section>
-
 </body>
 </html>
